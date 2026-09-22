@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GST Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ab957c;
+            margin: 0;
+        }
+        table {
+            background-color: #2c3e50;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border-spacing: 10px;
+        }
+        input[type="text"] {
+            width: 95%;
+            height: 80px;
+            font-size: 28px;
+            text-align: right;
+            font-weight: bold;
+            padding: 25px;
+            box-sizing: border-box;
+            border: none;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+        }
+        input[type="button"] {
+            width: 75px;
+            height: 60px;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: skyblue;
+            color: #ecf0f1;
+            transition: background-color 0.2s;
+        }
+        input[type="button"]:hover {
+            background-color: deepskyblue;
+        }
+        input[type="button"].operator {
+            background-color: #e67e22;
+        }
+        input[type="button"].operator:hover {
+            background-color: #d35400;
+        }
+        input[type="button"].clear {
+            background-color: #c0392b;
+        }
+        input[type="button"].clear:hover {
+            background-color: #e74c3c;
+        }
+        input[type="button"].equal {
+            background-color: #27ae60;
+        }
+        input[type="button"].equal:hover {
+            background-color: #2ecc71;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+            <td colspan="4">
+                <input type="text" id="display" disabled>
+            </td>
+        </tr>
+        
+        <tr>
+            <td><input type="button" class="clear" value="C" onclick="clearDisplay()"></td>            
+            <td><input type="button" class="operator" value="+GST" onclick="calculateGST(18, 'add')"></td>
+            <td><input type="button" class="operator" value="-GST" onclick="calculateGST(18, 'remove')"></td>
+            <td><input type="button" class="operator" value="+" onclick="appendValue('+')"></td>
+        </tr>
+        
+        <tr>
+            <td><input type="button" value="7" onclick="appendValue('7')"></td>
+            <td><input type="button" value="8" onclick="appendValue('8')"></td>
+            <td><input type="button" value="9" onclick="appendValue('9')"></td>
+            <td><input type="button" class="operator" value="-" onclick="appendValue('-')"></td>
+        </tr>
+        
+        <tr>
+            <td><input type="button" value="4" onclick="appendValue('4')"></td>
+            <td><input type="button" value="5" onclick="appendValue('5')"></td>
+            <td><input type="button" value="6" onclick="appendValue('6')"></td>
+            <td><input type="button" class="operator" value="×" onclick="appendValue('×')"></td>
+        </tr>
+        
+        <tr>
+            <td><input type="button" value="1" onclick="appendValue('1')"></td>
+            <td><input type="button" value="2" onclick="appendValue('2')"></td>
+            <td><input type="button" value="3" onclick="appendValue('3')"></td>
+            <td><input type="button" class="operator" value="÷" onclick="appendValue('÷')"></td>
+        </tr>
+        
+        <tr>
+            <td><input type="button" value="0" onclick="appendValue('0')"></td>
+            <td><input type="button" value="00" onclick="appendValue('00')"></td>
+            <td><input type="button" value="." onclick="appendValue('.')"></td>
+            <td><input type="button" class="equal" value="=" onclick="calculate()"></td>
+        </tr>
+    </table>
+
+    <script>
+        const display = document.getElementById('display');
+
+        function appendValue(value) {
+            display.value += value;
+        }
+
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        function calculate() {
+            try {
+                if (display.value !== '') {
+                    // Replace user-friendly multiplication and division symbols with JS operators
+                    let formattedExpression = display.value.replace(/×/g, '*').replace(/÷/g, '/');
+                    display.value = eval(formattedExpression);
+                }
+            } catch (error) {
+                display.value = 'Error';
+                setTimeout(clearDisplay, 1500);
+            }
+        }
+
+        function calculateGST(rate, type) {
+            let currentValue = parseFloat(display.value);
+
+            if (isNaN(currentValue)) {
+                display.value = "Error";
+                setTimeout(clearDisplay, 1500);
+                return;
+            }
+
+            if (type === 'add') {
+                display.value = (currentValue + (currentValue * rate / 100)).toFixed(2);
+            } else if (type === 'remove') {
+                display.value = (currentValue / (1 + rate / 100)).toFixed(2);
+            }
+        }
+    </script>
+</body>
+</html>
